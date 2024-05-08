@@ -1,0 +1,32 @@
+ [
+    {
+    "nombreProducto": "Producto I",
+      "descripcion": "Descripción I",
+      "precio": "100",
+      "rutaImagen": "imagen0.webp"
+    },
+    {
+      "nombreProducto": "Producto II",
+      "descripcion": "Descripción II",
+      "precio": "200",
+      "rutaImagen": "imagen0.webp"
+    },
+    {
+      "nombreProducto": "Producto III",
+      "descripcion": "Descripción III",
+      "precio": "200",
+      "rutaImagen": "imagen0.webp"
+    },
+    {
+      "nombreProducto": "Producto IV",
+      "descripcion": "Descripción IV",
+      "precio": "200",
+      "rutaImagen": "imagen0.webp"
+    },
+    {
+      "nombreProducto": "Producto V",
+      "descripcion": "Descripción V",
+      "precio": "200",
+      "rutaImagen": "imagen0.webp"
+    }
+  ]
