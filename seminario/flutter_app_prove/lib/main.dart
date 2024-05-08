@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import 'dart:ui';
 
 void main() {
   runApp(  
@@ -45,16 +46,34 @@ class PrimeraPagina extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Primera Página'),
       ),
-      body: Center(
-        child: ElevatedButton(
-          child: const Text('Ir a la segunda página'),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const SegundaPagina()),
-            );
-          },
-        ),
+      body: Stack(
+        children: <Widget>[
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('background.jpeg'),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+            child: Container(
+              color: Colors.black.withOpacity(0),
+            ),
+          ),
+          Center(
+            child: ElevatedButton(
+              child: const Text('Ir a la segunda página'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SegundaPagina()),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -66,8 +85,9 @@ class SegundaPagina extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        
       appBar: AppBar(
-        title: const Text('Segunda Página'),
+        title: const Text('Segunda Página'),        
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.shopping_cart),
@@ -96,53 +116,56 @@ class SegundaPagina extends StatelessWidget {
                         );
                       },
                     );
-                                      
-                
-                },  
+                  },  
               );
             }
           ),
         ],
       ),
-      body: Row(  // Cambiamos de Center a Row
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,  // Centramos las columnas
+      body: Stack(
         children: <Widget>[
-          const Expanded(  // Utilizamos Expanded para que cada columna ocupe la mitad de la pantalla
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Expanded(
-                        child: Text("Datos de la empresa"),
-                      )        
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Expanded(
-                        child: Consumer<ProductosModel>(
-                          builder: (context, productosModel, child) {
-                            return ListaProductos(productos: productosModel.productos);
-                          },
-                        ),
-                      )
-                //     ],
-                //   ),
-                // ),
-                // Expanded(
-                //   child: Column(
-                //     mainAxisAlignment: MainAxisAlignment.center,
-                //     children: <Widget>[
-                //       Expanded(child: Consumer<ProductosModel>(
-                //           builder: (context, productosModel, child) {
-                //             return ListaProductos(productos: productosModel.productos);
-                //           },
-                //         ),
-                // )
-              ],
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('background.jpeg'),
+                fit: BoxFit.cover,
+              ),
             ),
+          ),
+          BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+            child: Container(
+              color: Colors.black.withOpacity(0),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              const Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      child: Text("Datos de la empresa"),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      child: Consumer<ProductosModel>(
+                        builder: (context, productosModel, child) {
+                          return ListaProductos(productos: productosModel.productos);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -249,10 +272,6 @@ class ProductoCard extends StatelessWidget {
 }
 class ListaProductos extends StatelessWidget {
   const ListaProductos({super.key, required List<Producto> productos});
-
-  //final int index;
-
-  //const ListaProductos({super.key});
 
   @override
   Widget build(BuildContext context) {
