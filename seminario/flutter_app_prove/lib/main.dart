@@ -28,9 +28,9 @@ class MiApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Mi App',
+      title: 'The Cofee House',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.brown,
       ),
       home: const PrimeraPagina(),
     );
@@ -44,7 +44,8 @@ class PrimeraPagina extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Primera Página'),
+        title: const Text('The Coffee House'),
+        backgroundColor: Color.fromARGB(255, 188, 158, 148),
       ),
       body: Stack(
         children: <Widget>[
@@ -63,15 +64,34 @@ class PrimeraPagina extends StatelessWidget {
             ),
           ),
           Center(
-            child: ElevatedButton(
-              child: const Text('Ir a la segunda página'),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SegundaPagina()),
-                );
-              },
-            ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.asset('home_page.jpeg', width: 500, height: 500, fit: BoxFit.cover),
+              ),
+               // Agrega tu imagen aquí
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white, 
+                  backgroundColor: Colors.brown, // foreground
+                  side: const BorderSide(color: Colors.black, width: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                  ),                
+                ),
+                child: const Text('See our shop'),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SegundaPagina()),
+                  );
+                },
+              ),
+            ],
+          ),
           ),
         ],
       ),
@@ -87,7 +107,8 @@ class SegundaPagina extends StatelessWidget {
     return Scaffold(
         
       appBar: AppBar(
-        title: const Text('Segunda Página'),        
+        title: const Text('The Coffee House'),
+        backgroundColor: const Color.fromARGB(255, 188, 158, 148),    
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.shopping_cart),
@@ -142,16 +163,19 @@ class SegundaPagina extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               const Expanded(
+                flex:1,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Expanded(
-                      child: Text("Datos de la empresa"),
-                    ),
-                  ],
+                  // children: <Widget>[
+                  //   Expanded(
+                  //     child:,
+                  //     // Agregar algo aquí
+                  //   ),
+                  // ],
                 ),
               ),
               Expanded(
+                flex:2,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -163,6 +187,17 @@ class SegundaPagina extends StatelessWidget {
                       ),
                     ),
                   ],
+                ),
+              ),
+              const Expanded(
+                flex: 1,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  // children: <Widget>[
+                  //   Expanded(
+                  //     // Agregar algo aquí
+                  //   ),
+                  // ],
                 ),
               ),
             ],
@@ -246,7 +281,7 @@ class ProductoCard extends StatelessWidget {
                 ButtonBar(
                   children: <Widget>[
                     TextButton(
-                      child: const Text('COMPRAR'),
+                      child: const Text('AGREGAR AL CARRITO'),
                       onPressed: () {
                         Provider.of<CarritoModel>(context, listen: false).agregarProducto(
                               Producto(
