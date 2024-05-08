@@ -11,16 +11,10 @@ void main() {
       providers: [
         ChangeNotifierProvider(
           create: (context) => ProductosModel()..cargarProductos('productos.json'),
-          child: const MiApp(),
-        ),
+        ),  
         ChangeNotifierProvider(
-          create: (context) => ProductosModel()..cargarProductos('productos_1.json'),
-          child: const MiApp(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => ProductosModel()..cargarProductos('productos_2.json'),
-          child: const MiApp(),
-        ),
+          create: (context) => CarritoModel(),
+        ),      
       ],
       child: const MiApp(),
     ),
@@ -74,47 +68,79 @@ class SegundaPagina extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Segunda Página'),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.shopping_cart),
+               onPressed: () {
+                showModalBottomSheet(
+                context: context,
+                builder: (BuildContext context) {                  
+                    return Consumer<CarritoModel>(
+                      builder: (context, carritoModel, child) {
+                        return Column(
+                          children: <Widget>[
+                            const Expanded(
+                              child: ListaCarrito(),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Text(
+                                'Total: \$${carritoModel.total.toStringAsFixed(2)}',
+                                style: const TextStyle(
+                                  fontSize: 24.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                                      
+                
+                },  
+              );
+            }
+          ),
+        ],
       ),
       body: Row(  // Cambiamos de Center a Row
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,  // Centramos las columnas
         children: <Widget>[
-          Expanded(  // Utilizamos Expanded para que cada columna ocupe la mitad de la pantalla
+          const Expanded(  // Utilizamos Expanded para que cada columna ocupe la mitad de la pantalla
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Expanded(
-                            child: Consumer<ProductosModel>(
-                              builder: (context, productosModel, child) {
-                                return ListaProductos(productos: productosModel.productos);
-                              },
-                            ),
-                          )        
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                         Expanded(child: Consumer<ProductosModel>(
-                              builder: (context, productosModel, child) {
-                                return ListaProductos(productos: productosModel.productos);
-                              },
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                   Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Expanded(child: Consumer<ProductosModel>(
-                              builder: (context, productosModel, child) {
-                                return ListaProductos(productos: productosModel.productos);
-                              },
-                            ),
-                )
+                        child: Text("Datos de la empresa"),
+                      )        
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Expanded(
+                        child: Consumer<ProductosModel>(
+                          builder: (context, productosModel, child) {
+                            return ListaProductos(productos: productosModel.productos);
+                          },
+                        ),
+                      )
+                //     ],
+                //   ),
+                // ),
+                // Expanded(
+                //   child: Column(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     children: <Widget>[
+                //       Expanded(child: Consumer<ProductosModel>(
+                //           builder: (context, productosModel, child) {
+                //             return ListaProductos(productos: productosModel.productos);
+                //           },
+                //         ),
+                // )
               ],
             ),
           ),
@@ -138,37 +164,88 @@ class ProductoCard extends StatelessWidget {
                 });
 
   @override
-  Widget build(BuildContext context) {   
-    return Card(
-      child: Column(
+ Widget build(BuildContext context) {   
+  return Card(
+    child: IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Image.asset(rutaImagen,
-          errorBuilder: (context, error, stackTrace) {
-            return const Text('No se pudo cargar la imagen');
-          }),  // Agregamos la imagen aquí
-          ListTile(
-            title: Text(nombreProducto),
-            subtitle: Text(descripcion),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              'Precio: \$$precio',
-              style: const TextStyle(fontWeight: FontWeight.bold),
+          Container(
+            width: 120, // Ancho de la columna lateral
+            color: Colors.blue,  // Color de la columna lateral
+            child: Column(
+              children: <Widget>[
+                ListTile(
+                  title: Text(
+                    nombreProducto,
+                    style: const TextStyle(
+                      color: Color.fromARGB(255, 56, 56, 57),  // Color del texto
+                      fontSize: 15.0,  // Tamaño del texto
+                      fontWeight: FontWeight.bold,  // Grosor del texto
+                    ),
+                  ),
+                  subtitle: Text(
+                    descripcion,
+                    style: const TextStyle(
+                      color: Color.fromARGB(255, 255, 255, 255),  // Color del texto
+                      fontSize: 11.0,  // Tamaño del texto
+                      fontStyle: FontStyle.italic,  // Estilo del texto
+                    ),
+                  ),
+                  leading: const Icon(
+                    Icons.shopping_cart,  // Icono de la columna lateral
+                    color: Color.fromARGB(255, 255, 255, 255),  // Color del icono
+                  )
+                ),
+
+              ], // Texto de la columna lateral
             ),
+            
           ),
-          ButtonBar(
-            children: <Widget>[
-                TextButton(
-                child: const Text('COMPRAR'),
-                onPressed: () { /* código para comprar el producto */ },
-              ),
-            ],
+          Expanded(
+            child: Column(
+              children: <Widget>[
+                Image.asset(rutaImagen,
+                errorBuilder: (context, error, stackTrace) {
+                  return const Text('No se pudo cargar la imagen');
+                }),  // Agregamos la imagen aquí
+                ListTile(
+                  title: Text(nombreProducto),
+                  subtitle: Text(descripcion),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    'Precio: \$$precio',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                ButtonBar(
+                  children: <Widget>[
+                    TextButton(
+                      child: const Text('COMPRAR'),
+                      onPressed: () {
+                        Provider.of<CarritoModel>(context, listen: false).agregarProducto(
+                              Producto(
+                                nombreProducto: nombreProducto,
+                                descripcion: descripcion,
+                                precio: precio.toString(),
+                                rutaImagen: rutaImagen,
+                              ),
+                         ); /* código para comprar el producto */ 
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
+
 }
 class ListaProductos extends StatelessWidget {
   const ListaProductos({super.key, required List<Producto> productos});
@@ -230,6 +307,48 @@ class ProductosModel extends ChangeNotifier {
     List<dynamic> json = jsonDecode(jsonString);
     _productos = json.map((productoJson) => Producto.fromJson(productoJson)).toList();
     notifyListeners();
+  }
+}
+class CarritoModel extends ChangeNotifier {
+  final List<Producto> _productosEnCarrito = [];
+
+  List<Producto> get productos => _productosEnCarrito;
+
+  double get total {
+    return productos.fold(0, (total, current) => total + double.parse(current.precio));
+  }
+
+  void agregarProducto(Producto producto) {
+    _productosEnCarrito.add(producto);
+    notifyListeners();
+  }
+
+  void eliminarProducto(Producto producto) {
+    _productosEnCarrito.remove(producto);
+    notifyListeners();
+  }
+}
+
+class ListaCarrito extends StatelessWidget {
+  const ListaCarrito({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<CarritoModel>(
+      builder: (context, carritoModel, child) {
+        return ListView.builder(
+          itemCount: carritoModel.productos.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              trailing: Text('\$${carritoModel.productos[index].precio}'),
+              title: Text(carritoModel.productos[index].nombreProducto), 
+              subtitle: Text(carritoModel.productos[index].descripcion),
+              leading: Image.asset(carritoModel.productos[index].rutaImagen),
+            );
+          },
+        );
+      },
+    );
   }
 }
 
