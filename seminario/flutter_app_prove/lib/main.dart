@@ -45,7 +45,7 @@ class PrimeraPagina extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('The Coffee House'),
-        backgroundColor: Color.fromARGB(255, 188, 158, 148),
+        backgroundColor: const Color.fromARGB(255, 188, 158, 148),
       ),
       body: Stack(
         children: <Widget>[
@@ -69,9 +69,17 @@ class PrimeraPagina extends StatelessWidget {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Image.asset('home_page.jpeg', width: 500, height: 500, fit: BoxFit.cover),
+                child: LayoutBuilder (
+                  builder: (BuildContext context, BoxConstraints constraints) {
+                        return Image.asset(
+                          'home_page.jpeg',
+                          width: constraints.maxWidth < 500 ? constraints.maxWidth : 500,
+                          //height: constraints.maxHeight < 500 ? constraints.maxHeight : 500,
+                          fit: BoxFit.scaleDown,
+                        );
+                  },
+                ),
               ),
-               // Agrega tu imagen aquí
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white, 
@@ -159,48 +167,45 @@ class SegundaPagina extends StatelessWidget {
               color: Colors.black.withOpacity(0),
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              const Expanded(
-                flex:1,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  // children: <Widget>[
-                  //   Expanded(
-                  //     child:,
-                  //     // Agregar algo aquí
-                  //   ),
-                  // ],
-                ),
-              ),
-              Expanded(
-                flex:2,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Expanded(
-                      child: Consumer<ProductosModel>(
-                        builder: (context, productosModel, child) {
-                          return ListaProductos(productos: productosModel.productos);
-                        },
+          LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  if (constraints.maxWidth > 600) ...[
+                    const Expanded(
+                      flex:1,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                       ),
                     ),
                   ],
-                ),
-              ),
-              const Expanded(
-                flex: 1,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  // children: <Widget>[
-                  //   Expanded(
-                  //     // Agregar algo aquí
-                  //   ),
-                  // ],
-                ),
-              ),
-            ],
+                  Expanded(
+                    flex:2,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Expanded(
+                          child: Consumer<ProductosModel>(
+                            builder: (context, productosModel, child) {
+                              return ListaProductos(productos: productosModel.productos);
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (constraints.maxWidth > 600) ...[
+                    const Expanded(
+                      flex: 1,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                      ),
+                    ),
+                  ],
+                ],
+              );
+            },
           ),
         ],
       ),
@@ -222,89 +227,105 @@ class ProductoCard extends StatelessWidget {
                 });
 
   @override
- Widget build(BuildContext context) {   
-  return Card(
-    child: IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Container(
-            width: 120, // Ancho de la columna lateral
-            color: Colors.blue,  // Color de la columna lateral
-            child: Column(
-              children: <Widget>[
-                ListTile(
-                  title: Text(
-                    nombreProducto,
-                    style: const TextStyle(
-                      color: Color.fromARGB(255, 56, 56, 57),  // Color del texto
-                      fontSize: 15.0,  // Tamaño del texto
-                      fontWeight: FontWeight.bold,  // Grosor del texto
-                    ),
+  Widget build(BuildContext context) {   
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        return Card(
+          child: AspectRatio(
+            aspectRatio: 16 / 9,  // Ajusta esto a la relación de aspecto deseada
+            child: IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Container(
+                    width: constraints.maxWidth / 3, // Ancho de la columna lateral
+                    color: Colors.blue,  // Color de la columna lateral
+                    child: Column(
+                      children: <Widget>[
+                        ListTile(
+                          title: Text(
+                            nombreProducto,
+                            style: const TextStyle(
+                              color: Color.fromARGB(255, 56, 56, 57),  // Color del texto
+                              fontSize: 15.0,  // Tamaño del texto
+                              fontWeight: FontWeight.bold,  // Grosor del texto
+                            ),
+                          ),
+                          subtitle: Text(
+                            descripcion,
+                            style: const TextStyle(
+                              color: Color.fromARGB(255, 255, 255, 255),  // Color del texto
+                              fontSize: 11.0,  // Tamaño del texto
+                              fontStyle: FontStyle.italic,  // Estilo del texto
+                            ),
+                          )
+                        ),
+                      ], // Texto de la columna lateral
+                    ),            
                   ),
-                  subtitle: Text(
-                    descripcion,
-                    style: const TextStyle(
-                      color: Color.fromARGB(255, 255, 255, 255),  // Color del texto
-                      fontSize: 11.0,  // Tamaño del texto
-                      fontStyle: FontStyle.italic,  // Estilo del texto
-                    ),
-                  ),
-                  leading: const Icon(
-                    Icons.shopping_cart,  // Icono de la columna lateral
-                    color: Color.fromARGB(255, 255, 255, 255),  // Color del icono
-                  )
-                ),
-
-              ], // Texto de la columna lateral
-            ),
-            
-          ),
-          Expanded(
-            child: Column(
-              children: <Widget>[
-                Image.asset(rutaImagen,
-                errorBuilder: (context, error, stackTrace) {
-                  return const Text('No se pudo cargar la imagen');
-                }),  // Agregamos la imagen aquí
-                ListTile(
-                  title: Text(nombreProducto),
-                  subtitle: Text(descripcion),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    'Precio: \$$precio',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                ButtonBar(
-                  children: <Widget>[
-                    TextButton(
-                      child: const Text('AGREGAR AL CARRITO'),
-                      onPressed: () {
-                        Provider.of<CarritoModel>(context, listen: false).agregarProducto(
-                              Producto(
-                                nombreProducto: nombreProducto,
-                                descripcion: descripcion,
-                                precio: precio.toString(),
-                                rutaImagen: rutaImagen,
+                  Expanded(
+                    child: Column(
+                      children: <Widget>[
+                        Image.asset(rutaImagen,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Text('No se pudo cargar la imagen');
+                        }),  // Agregamos la imagen aquí
+                        ListTile(
+                          title: Text(nombreProducto),
+                          subtitle: Text(descripcion),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(3.0),
+                          child: Text(
+                            'Precio: \$$precio',
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        ButtonBar(
+                          children: <Widget>[
+                            TextButton(
+                              style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.brown), 
+                                                foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                                                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
+                                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                  RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(10.0),
+                                                  ),
+                                                ),
                               ),
-                         ); /* código para comprar el producto */ 
-                      },
+                              child: const Text(
+                                'Agregar al carrito',
+                                style: TextStyle(
+                                    fontSize: 11.0,
+                                ),
+                              ),
+                              onPressed: () {
+                                Provider.of<CarritoModel>(context, listen: false).agregarProducto(
+                                      Producto(
+                                        nombreProducto: nombreProducto,
+                                        descripcion: descripcion,
+                                        precio: precio.toString(),
+                                        rutaImagen: rutaImagen,
+                                      ),
+                                ); /* código para comprar el producto */ 
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
           ),
-        ],
-      ),
-    ),
-  );
+        );
+      },
+    );
+  }
 }
 
-}
+
 class ListaProductos extends StatelessWidget {
   const ListaProductos({super.key, required List<Producto> productos});
 
