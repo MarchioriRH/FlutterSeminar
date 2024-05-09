@@ -1,17 +1,21 @@
 //import 'dart:ffi';
 //import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_prove/src/utils/listas.dart';
 import 'package:provider/provider.dart';
-import 'dart:convert';
-import 'package:flutter/services.dart';
+//import 'dart:convert';
+//import 'package:flutter/services.dart';
 import 'dart:ui';
+import 'package:flutter_app_prove/src/models/carrito_model.dart';
+import 'package:flutter_app_prove/src/models/producto_model.dart';
+//import 'package:flutter_app_prove/src/utils/producto.dart';
 
 void main() {
   runApp(  
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => ProductosModel()..cargarProductos('productos.json'),
+          create: (context) => ProductosModel()..cargarProductos('files/productos.json'),
         ),  
         ChangeNotifierProvider(
           create: (context) => CarritoModel(),
@@ -52,7 +56,7 @@ class PrimeraPagina extends StatelessWidget {
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('background.jpeg'),
+                image: AssetImage('images/background.jpeg'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -72,7 +76,7 @@ class PrimeraPagina extends StatelessWidget {
                 child: LayoutBuilder (
                   builder: (BuildContext context, BoxConstraints constraints) {
                         return Image.asset(
-                          'home_page.jpeg',
+                          'images/home_page.jpeg',
                           width: constraints.maxWidth < 500 ? constraints.maxWidth : 500,
                           //height: constraints.maxHeight < 500 ? constraints.maxHeight : 500,
                           fit: BoxFit.scaleDown,
@@ -156,7 +160,7 @@ class SegundaPagina extends StatelessWidget {
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('background.jpeg'),
+                image: AssetImage('images/background.jpeg'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -212,221 +216,3 @@ class SegundaPagina extends StatelessWidget {
     );
   }
 }
-
-class ProductoCard extends StatelessWidget {
-  final String nombreProducto;
-  final String descripcion;
-  final double precio;
-  final String rutaImagen;
-
-  const ProductoCard({super.key,
-                required this.nombreProducto, 
-                required this.descripcion, 
-                required this.precio, 
-                required this.rutaImagen
-                });
-
-  @override
-  Widget build(BuildContext context) {   
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        return Card(
-          child: AspectRatio(
-            aspectRatio: 16 / 9,  // Ajusta esto a la relación de aspecto deseada
-            child: IntrinsicHeight(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Container(
-                    width: constraints.maxWidth / 3, // Ancho de la columna lateral
-                    color: Colors.blue,  // Color de la columna lateral
-                    child: Column(
-                      children: <Widget>[
-                        ListTile(
-                          title: Text(
-                            nombreProducto,
-                            style: const TextStyle(
-                              color: Color.fromARGB(255, 56, 56, 57),  // Color del texto
-                              fontSize: 15.0,  // Tamaño del texto
-                              fontWeight: FontWeight.bold,  // Grosor del texto
-                            ),
-                          ),
-                          subtitle: Text(
-                            descripcion,
-                            style: const TextStyle(
-                              color: Color.fromARGB(255, 255, 255, 255),  // Color del texto
-                              fontSize: 11.0,  // Tamaño del texto
-                              fontStyle: FontStyle.italic,  // Estilo del texto
-                            ),
-                          )
-                        ),
-                      ], // Texto de la columna lateral
-                    ),            
-                  ),
-                  Expanded(
-                    child: Column(
-                      children: <Widget>[
-                        Image.asset(rutaImagen,
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Text('No se pudo cargar la imagen');
-                        }),  // Agregamos la imagen aquí
-                        ListTile(
-                          title: Text(nombreProducto),
-                          subtitle: Text(descripcion),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(3.0),
-                          child: Text(
-                            'Precio: \$$precio',
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        ButtonBar(
-                          children: <Widget>[
-                            TextButton(
-                              style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.brown), 
-                                                foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                                                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
-                                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                  RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(10.0),
-                                                  ),
-                                                ),
-                              ),
-                              child: const Text(
-                                'Agregar al carrito',
-                                style: TextStyle(
-                                    fontSize: 11.0,
-                                ),
-                              ),
-                              onPressed: () {
-                                Provider.of<CarritoModel>(context, listen: false).agregarProducto(
-                                      Producto(
-                                        nombreProducto: nombreProducto,
-                                        descripcion: descripcion,
-                                        precio: precio.toString(),
-                                        rutaImagen: rutaImagen,
-                                      ),
-                                ); /* código para comprar el producto */ 
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
-
-
-class ListaProductos extends StatelessWidget {
-  const ListaProductos({super.key, required List<Producto> productos});
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<ProductosModel>(
-      builder: (context, productosModel, child) {
-        return ListView.builder(
-          itemCount: productosModel.productos.length,
-          itemBuilder: (context, index) {
-            return ProductoCard(
-              nombreProducto: productosModel.productos[index].nombreProducto,
-              descripcion: productosModel.productos[index].descripcion,
-              precio: double.parse(productosModel.productos[index].precio),
-              rutaImagen: productosModel.productos[index].rutaImagen,
-            );
-          },
-        );
-      },
-    );
-  }
-}
-class Producto {
-  final String nombreProducto;
-  final String descripcion;
-  final String precio;
-  final String rutaImagen;
-
-  Producto({required this.nombreProducto, required this.descripcion, required this.precio, required this.rutaImagen});
-
-  // Crea un objeto Producto a partir de un mapa
-  factory Producto.fromJson(Map<String, dynamic> json) {
-    return Producto(
-      nombreProducto: json['nombreProducto'],
-      descripcion: json['descripcion'],
-      precio: json['precio'],
-      rutaImagen: json['rutaImagen'],
-    );
-  }
-}
-
-class ProductosModel extends ChangeNotifier {
-  List<Producto> _productos = [];
-
-  List<Producto> get productos => _productos;
-
-  void addProducto(Producto producto) {
-    _productos.add(producto);
-    notifyListeners();
-  }
-
-  Future<void> cargarProductos(String jsonFile) async {
-    String jsonString = await rootBundle.loadString(jsonFile);
-    List<dynamic> json = jsonDecode(jsonString);
-    _productos = json.map((productoJson) => Producto.fromJson(productoJson)).toList();
-    notifyListeners();
-  }
-}
-class CarritoModel extends ChangeNotifier {
-  final List<Producto> _productosEnCarrito = [];
-
-  List<Producto> get productos => _productosEnCarrito;
-
-  double get total {
-    return productos.fold(0, (total, current) => total + double.parse(current.precio));
-  }
-
-  void agregarProducto(Producto producto) {
-    _productosEnCarrito.add(producto);
-    notifyListeners();
-  }
-
-  void eliminarProducto(Producto producto) {
-    _productosEnCarrito.remove(producto);
-    notifyListeners();
-  }
-}
-
-class ListaCarrito extends StatelessWidget {
-  const ListaCarrito({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<CarritoModel>(
-      builder: (context, carritoModel, child) {
-        return ListView.builder(
-          itemCount: carritoModel.productos.length,
-          itemBuilder: (context, index) {
-            return ListTile(
-              trailing: Text('\$${carritoModel.productos[index].precio}'),
-              title: Text(carritoModel.productos[index].nombreProducto), 
-              subtitle: Text(carritoModel.productos[index].descripcion),
-              leading: Image.asset(carritoModel.productos[index].rutaImagen),
-            );
-          },
-        );
-      },
-    );
-  }
-}
-
-
-
-

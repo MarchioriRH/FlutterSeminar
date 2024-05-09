@@ -16,6 +16,14 @@ dependencies:
     sdk: flutter
   provider: ^6.1.2
 
+  # Add the following dependencies to the application.
+  # models:
+  #   path: lib/src/models/
+
+  # utils:
+  #   path: lib/src/utils/
+ 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -32,3 +40,4 @@ flutter:
     # Add assets from the images directory to the application.
     - assets/images/
     - assets/
+  
