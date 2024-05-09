@@ -38,7 +38,18 @@ class ListaCarrito extends StatelessWidget {
           itemCount: carritoModel.productos.length,
           itemBuilder: (context, index) {
             return ListTile(
-              trailing: Text('\$${carritoModel.productos[index].precio}'),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text('\$${carritoModel.productos[index].precio}'),
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () {
+                      carritoModel.eliminarProducto(carritoModel.productos[index]);
+                    },
+                  ),
+                ],
+              ),
               title: Text(carritoModel.productos[index].nombreProducto), 
               subtitle: Text(carritoModel.productos[index].descripcion),
               leading: Image.asset(carritoModel.productos[index].rutaImagen),

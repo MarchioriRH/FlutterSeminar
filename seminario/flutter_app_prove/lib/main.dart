@@ -72,13 +72,14 @@ class PrimeraPagina extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(3.0),
                 child: LayoutBuilder (
                   builder: (BuildContext context, BoxConstraints constraints) {
                         return Image.asset(
                           'images/home_page.jpeg',
-                          width: constraints.maxWidth < 500 ? constraints.maxWidth : 500,
+                          width: constraints.maxWidth < 400 ? constraints.maxWidth : 400,
                           //height: constraints.maxHeight < 500 ? constraints.maxHeight : 500,
+                          height: constraints.maxHeight * 0.8 < 400 ? constraints.maxHeight * 0.8 : 400,
                           fit: BoxFit.scaleDown,
                         );
                   },
@@ -119,11 +120,12 @@ class SegundaPagina extends StatelessWidget {
     return Scaffold(
         
       appBar: AppBar(
-        title: const Text('The Coffee House'),
+        title: const Text('The Coffee Shop'),
         backgroundColor: const Color.fromARGB(255, 188, 158, 148),    
         actions: <Widget>[
           IconButton(
-            icon: const Icon(Icons.shopping_cart),
+            icon: const Icon(Icons.shopping_cart, 
+              color: Colors.black38, size: 30.0), 
                onPressed: () {
                 showModalBottomSheet(
                 context: context,
@@ -176,7 +178,7 @@ class SegundaPagina extends StatelessWidget {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  if (constraints.maxWidth > 600) ...[
+                  if (constraints.maxWidth > 860) ...[
                     const Expanded(
                       flex:1,
                       child: Column(
@@ -199,7 +201,7 @@ class SegundaPagina extends StatelessWidget {
                       ],
                     ),
                   ),
-                  if (constraints.maxWidth > 600) ...[
+                  if (constraints.maxWidth > 860) ...[
                     const Expanded(
                       flex: 1,
                       child: Column(

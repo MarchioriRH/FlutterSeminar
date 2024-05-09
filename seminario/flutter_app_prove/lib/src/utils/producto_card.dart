@@ -22,7 +22,7 @@ class ProductoCard extends StatelessWidget {
       builder: (BuildContext context, BoxConstraints constraints) {
         return Card(
           child: AspectRatio(
-            aspectRatio: 16 / 9,  // Ajusta esto a la relación de aspecto deseada
+            aspectRatio: 16 / 8,  // Ajusta esto a la relación de aspecto deseada
             child: IntrinsicHeight(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -65,40 +65,49 @@ class ProductoCard extends StatelessWidget {
                           subtitle: Text(descripcion),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(3.0),
+                          padding: const EdgeInsets.all(8.0),
                           child: Text(
                             'Precio: \$$precio',
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                            
                           ),
                         ),
                         ButtonBar(
+                          buttonTextTheme: ButtonTextTheme.accent,
                           children: <Widget>[
-                            TextButton(
-                              style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.brown), 
-                                                foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                                                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
-                                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                  RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(10.0),
-                                                  ),
-                                                ),
-                              ),
-                              child: const Text(
-                                'Agregar al carrito',
-                                style: TextStyle(
-                                    fontSize: 11.0,
+                            MouseRegion(
+                              cursor: SystemMouseCursors.click,                             
+                              child: TextButton(
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                                    (Set<MaterialState> states) {
+                                      if (states.contains(MaterialState.hovered)) {
+                                        return Colors.lightGreen; // Color cuando el botón es hovered
+                                      }
+                                      return Colors.brown; // Color por defecto
+                                    },
+                                  ),
+                                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                                  elevation: MaterialStateProperty.all<double>(5.0),
                                 ),
+                                child: const Text(
+                                  textScaler: TextScaler.linear(0.5),
+                                  'Agregar al carrito',
+                                  style: TextStyle(
+                                    fontSize: 15.0,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Provider.of<CarritoModel>(context, listen: false).agregarProducto(
+                                    Producto(
+                                      nombreProducto: nombreProducto,
+                                      descripcion: descripcion,
+                                      precio: precio.toString(),
+                                      rutaImagen: rutaImagen,
+                                    ),
+                                  ); /* código para comprar el producto */ 
+                                },
                               ),
-                              onPressed: () {
-                                Provider.of<CarritoModel>(context, listen: false).agregarProducto(
-                                      Producto(
-                                        nombreProducto: nombreProducto,
-                                        descripcion: descripcion,
-                                        precio: precio.toString(),
-                                        rutaImagen: rutaImagen,
-                                      ),
-                                ); /* código para comprar el producto */ 
-                              },
                             ),
                           ],
                         ),
