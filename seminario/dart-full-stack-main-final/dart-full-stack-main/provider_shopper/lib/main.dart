@@ -5,7 +5,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:products_api/api.dart';
 import 'package:products_repository/products_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_shopper/bootstrap.dart';
@@ -15,6 +14,7 @@ import 'package:provider_shopper/screens/cart.dart';
 import 'package:provider_shopper/screens/catalog.dart';
 import 'package:provider_shopper/screens/login.dart';
 
+import 'package:products_api/api.dart';
 
 
 void main() {

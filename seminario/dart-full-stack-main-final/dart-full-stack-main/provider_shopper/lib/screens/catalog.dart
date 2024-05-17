@@ -19,6 +19,7 @@ class MyCatalog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("context: $context");
     return Scaffold(
       body: 
          FutureBuilder<List<Product>>(

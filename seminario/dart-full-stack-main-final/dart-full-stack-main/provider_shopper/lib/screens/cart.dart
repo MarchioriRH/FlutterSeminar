@@ -19,6 +19,7 @@ class MyCart extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.favorite_border),
             onPressed: () {
+              print("antes de showModalBottomSheet");
               showModalBottomSheet<Widget>(context: context, builder: (BuildContext context) {
                 // Your code here
                 return Consumer<CartModel>(

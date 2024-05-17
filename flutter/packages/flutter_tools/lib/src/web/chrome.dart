@@ -214,6 +214,7 @@ class ChromiumLauncher {
       '--no-default-browser-check',
       '--disable-default-apps',
       '--disable-translate',
+      '--disable-web-security',
       if (headless)
         ...<String>[
           '--headless',
