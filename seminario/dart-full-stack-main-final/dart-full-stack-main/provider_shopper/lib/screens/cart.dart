@@ -19,30 +19,7 @@ class MyCart extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.favorite_border),
             onPressed: () {
-              print("antes de showModalBottomSheet");
-              showModalBottomSheet<Widget>(context: context, builder: (BuildContext context) {
-                // Your code here
-                return Consumer<CartModel>(
-                  builder: (context, cart, child) {
-                    return Column(
-                      children: [
-                        Expanded(
-                          child: ListView.builder(
-                            itemCount: cart.favorites.length,
-                            itemBuilder: (context, index) {
-                              return ListTile(
-                                title: Text(cart.favorites[index].name),
-                              );
-                            },
-                          ),
-                        ),
-                        //Text('Total: \$${cart.totalPrice}', style: Theme.of(context).textTheme.display2),
-                      ],
-                    );
-                  },
-                );
-              }
-             );                           
+              showFavoritesModal(context);                           
             },
           ),
         ],
@@ -64,6 +41,89 @@ class MyCart extends StatelessWidget {
       ),
     );
   }
+
+//   Future<void> showFavoritesModal(BuildContext context) {
+//   return showModalBottomSheet<void>(
+//     context: context,
+//     builder: (BuildContext context) {
+//       return Column(
+//         mainAxisSize: MainAxisSize.min,
+//         children: [
+//           ListTile(
+//             title: Center(
+//               child: Text(
+//                 'Mi Título',
+//                 style: TextStyle(fontWeight: FontWeight.bold),
+//               ),
+//             ),
+//           ),
+//           Expanded(
+//             child: ListView.builder(
+//               itemCount: cart.favorites.length,
+//               itemBuilder: (context, index) {
+//                 return ListTile(
+//                   leading: const Icon(Icons.favorite),
+//                   title: Text(cart.favorites[index].name),
+//                   trailing: IconButton(
+//                     icon: Icon(Icons.remove_circle_outline),
+//                     onPressed: () {
+//                       cart.removeFavorite(cart.favorites[index]);
+//                       cart.add(cart.items[index]);
+//                     },
+//                   ),
+//                 );
+//               },
+//             ),
+//           ),
+//         ],
+//       );
+//     },
+//   ).whenComplete(() {
+//     if (cart.favorites.isEmpty) {
+//       Navigator.of(context).pop(); // Cierra el modal si la lista está vacía
+//     }
+//   });
+// }
+
+  Future<Widget?> showFavoritesModal(BuildContext context) {
+    return showModalBottomSheet<Widget>(
+    context: context,
+    backgroundColor: Color.fromARGB(255, 200, 244, 53), // Cambia el color de fondo aquí
+    builder: (BuildContext context) {
+        return Consumer<CartModel>(
+          builder: (context, cart, child) {
+            return Container( // Envuelve todo en un Container para aplicar estilos
+              padding: EdgeInsets.all(16.0), // Añade espaciado interno
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: cart.favorites.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          leading: const Icon(Icons.favorite),
+                          title: Text(cart.favorites[index].name),
+                          trailing: IconButton(
+                            icon: Icon(Icons.remove_circle_outline),
+                            onPressed: () {
+                              cart.removeFavorite(cart.favorites[index]);
+                              cart.add(cart.items[index]);
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  ),               
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
 }
 
 class _CartList extends StatelessWidget {
@@ -92,6 +152,7 @@ class _CartList extends StatelessWidget {
               icon: const Icon(Icons.favorite_border),
               onPressed: () {
                 cart.addFavorite(cart.items[index]);
+                cart.remove(cart.items[index]);
               },
             ),
           ],
@@ -125,7 +186,7 @@ class _CartTotal extends StatelessWidget {
             // the rest of the widgets in this build method.
             Consumer<CartModel>(
                 builder: (context, cart, child) =>
-                    Text('\$${cart.totalPrice}', style: hugeStyle)),
+                    Text('\$${cart.totalPrice.toStringAsFixed(2)}', style: hugeStyle)),
             const SizedBox(width: 24),
             FilledButton(
               onPressed: () {

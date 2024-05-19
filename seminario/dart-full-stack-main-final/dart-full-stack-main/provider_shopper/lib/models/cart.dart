@@ -65,4 +65,9 @@ class CartModel extends ChangeNotifier {
     _favorites.add(item);
     notifyListeners();
   }
+
+  void removeFavorite(Product item) {
+    _favorites.remove(item);
+    notifyListeners();
+  }
 }
