@@ -9,17 +9,10 @@ import 'package:products_repository/products_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_shopper/models/cart.dart';
 
-
-
-
-
 class MyCatalog extends StatelessWidget {
   const MyCatalog({super.key});
-  
-
   @override
   Widget build(BuildContext context) {
-    print("context: $context");
     return Scaffold(
       body: 
          FutureBuilder<List<Product>>(
@@ -31,14 +24,14 @@ class MyCatalog extends StatelessWidget {
                 return Text('Oops! Something went wrong. 🙁');
               } else { 
                 return  CustomScrollView(
-                      slivers: [
-                        _MyAppBar(),
-                        const SliverToBoxAdapter(child: SizedBox(height: 12)),
-                        SliverList(
-                                  delegate: SliverChildBuilderDelegate(
-                                      (context, index) => _MyListItem(snapshot.data![index]),childCount:snapshot.data!.length ),
-                        )
-                      ],    
+                  slivers: [
+                    _MyAppBar(),
+                    const SliverToBoxAdapter(child: SizedBox(height: 12)),
+                    SliverList(
+                              delegate: SliverChildBuilderDelegate(
+                                  (context, index) => _MyListItem(snapshot.data![index]),childCount:snapshot.data!.length ),
+                    )
+                  ],    
                 );          
               }
             }
@@ -47,7 +40,6 @@ class MyCatalog extends StatelessWidget {
   }
 }
 
-  
 
 class _AddButton extends StatelessWidget {
   final Product item;
@@ -64,7 +56,8 @@ class _AddButton extends StatelessWidget {
     // This can lead to significant performance improvements.
     var isInCart = context.select<CartModel, bool>(
       // Here, we are only interested whether [item] is inside the cart.
-      (cart) => cart.items.contains(item),
+      (cart) => cart.items.contains(item) 
+            || cart.favorites.contains(item),
     );
 
     return TextButton(

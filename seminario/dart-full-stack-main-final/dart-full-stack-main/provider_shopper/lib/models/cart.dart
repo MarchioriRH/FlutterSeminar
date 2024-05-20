@@ -76,4 +76,7 @@ class CartModel extends ChangeNotifier {
     _favorites.remove(item);
     notifyListeners();
   }
+
+  double get totalFavoritesPrice =>
+    _favorites.fold(0, (total, current) => total + current.price);
 }
