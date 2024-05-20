@@ -45,11 +45,14 @@ class MyCart extends StatelessWidget {
   }
 
   Future<Widget?> showFavoritesModal(BuildContext context) {
+    final GlobalKey<ScaffoldState> modelScaffoldKey = GlobalKey<ScaffoldState>();
     return showModalBottomSheet<Widget>(
     context: context,
-    backgroundColor: Color.fromARGB(255, 200, 244, 53), 
-    builder: (BuildContext context) {
-        return Consumer<CartModel>(
+    builder: (_) => Scaffold(
+        backgroundColor: Color.fromARGB(255, 200, 244, 53),
+        key: modelScaffoldKey,
+        body: 
+         Consumer<CartModel>(
           builder: (context, cart, child) {
             return Container( 
               padding: EdgeInsets.all(16.0), 
@@ -71,12 +74,24 @@ class MyCart extends StatelessWidget {
                         return ListTile(
                           leading: const Icon(Icons.favorite),
                           title: Text(cart.favorites[index].name),
-                          trailing: IconButton(
-                            icon: Icon(Icons.remove_circle_outline),
-                            onPressed: () {
-                              cart.add(cart.favorites[index]);
-                              cart.removeFavorite(cart.favorites[index]);
-                            },
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: Icon(Icons.remove_circle_outline),
+                                onPressed: () {
+                                  cart.add(cart.favorites[index]);
+                                  cart.removeFavorite(cart.favorites[index]);
+                                },
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.add_shopping_cart),
+                                onPressed: () {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('Not implemented yet.'), duration: Duration(seconds: 1)));
+                                },
+                              )
+                            ],
                           ),
                         );
                       },
@@ -86,9 +101,9 @@ class MyCart extends StatelessWidget {
               ),
             );
           },
-        );
-      },
-    );
+        ),
+      ),
+      );    
   }
 }
 

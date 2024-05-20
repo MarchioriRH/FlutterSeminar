@@ -29,7 +29,6 @@ class ApiClient {
   ///
   /// Get the list of products
   Future<Map<String, dynamic>> getProducts() async {
-    print("Base url apiclient: "+_baseUrl);
     final uri = Uri.parse('$_baseUrl/api/v1/products');
     final headers = await _getRequestHeaders();
 
