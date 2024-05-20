@@ -47,10 +47,12 @@ class CartModel extends ChangeNotifier {
 
   /// Adds [Product] to cart. This is the only way to modify the cart from outside.
   void add(Product item) {
-    _items.add(item);
-    // This line tells [Model] that it should rebuild the widgets that
-    // depend on it.
-    notifyListeners();
+    if (!_items.contains(item)) {
+      _items.add(item);
+      // This line tells [Model] that it should rebuild the widgets that
+      // depend on it.
+      notifyListeners();
+    } 
   }
 
   void remove(Product item) {
@@ -61,9 +63,13 @@ class CartModel extends ChangeNotifier {
   }
 
   // Adds [Product] to favorites.
-  void addFavorite(Product item) {
+  bool addFavorite(Product item) {
+    if (_favorites.contains(item)) {
+      return false;
+    }
     _favorites.add(item);
     notifyListeners();
+    return true;
   }
 
   void removeFavorite(Product item) {

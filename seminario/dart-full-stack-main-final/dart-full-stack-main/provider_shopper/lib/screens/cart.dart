@@ -9,8 +9,10 @@ import 'package:provider_shopper/models/cart.dart';
 class MyCart extends StatelessWidget {
   const MyCart({super.key});
 
+
   @override
   Widget build(BuildContext context) {
+   
     return Scaffold(
       appBar: AppBar(
         title: Text('Cart', style: Theme.of(context).textTheme.displayLarge),
@@ -42,61 +44,26 @@ class MyCart extends StatelessWidget {
     );
   }
 
-//   Future<void> showFavoritesModal(BuildContext context) {
-//   return showModalBottomSheet<void>(
-//     context: context,
-//     builder: (BuildContext context) {
-//       return Column(
-//         mainAxisSize: MainAxisSize.min,
-//         children: [
-//           ListTile(
-//             title: Center(
-//               child: Text(
-//                 'Mi Título',
-//                 style: TextStyle(fontWeight: FontWeight.bold),
-//               ),
-//             ),
-//           ),
-//           Expanded(
-//             child: ListView.builder(
-//               itemCount: cart.favorites.length,
-//               itemBuilder: (context, index) {
-//                 return ListTile(
-//                   leading: const Icon(Icons.favorite),
-//                   title: Text(cart.favorites[index].name),
-//                   trailing: IconButton(
-//                     icon: Icon(Icons.remove_circle_outline),
-//                     onPressed: () {
-//                       cart.removeFavorite(cart.favorites[index]);
-//                       cart.add(cart.items[index]);
-//                     },
-//                   ),
-//                 );
-//               },
-//             ),
-//           ),
-//         ],
-//       );
-//     },
-//   ).whenComplete(() {
-//     if (cart.favorites.isEmpty) {
-//       Navigator.of(context).pop(); // Cierra el modal si la lista está vacía
-//     }
-//   });
-// }
-
   Future<Widget?> showFavoritesModal(BuildContext context) {
     return showModalBottomSheet<Widget>(
     context: context,
-    backgroundColor: Color.fromARGB(255, 200, 244, 53), // Cambia el color de fondo aquí
+    backgroundColor: Color.fromARGB(255, 200, 244, 53), 
     builder: (BuildContext context) {
         return Consumer<CartModel>(
           builder: (context, cart, child) {
-            return Container( // Envuelve todo en un Container para aplicar estilos
-              padding: EdgeInsets.all(16.0), // Añade espaciado interno
+            return Container( 
+              padding: EdgeInsets.all(16.0), 
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  ListTile(
+                    title: Center(
+                      child: Text(
+                        'Favorites',
+                        style: Theme.of(context).textTheme.displayLarge,
+                      ),
+                    ),
+                  ),
                   Expanded(
                     child: ListView.builder(
                       itemCount: cart.favorites.length,
@@ -107,8 +74,8 @@ class MyCart extends StatelessWidget {
                           trailing: IconButton(
                             icon: Icon(Icons.remove_circle_outline),
                             onPressed: () {
+                              cart.add(cart.favorites[index]);
                               cart.removeFavorite(cart.favorites[index]);
-                              cart.add(cart.items[index]);
                             },
                           ),
                         );
@@ -123,7 +90,6 @@ class MyCart extends StatelessWidget {
       },
     );
   }
-
 }
 
 class _CartList extends StatelessWidget {
@@ -151,8 +117,12 @@ class _CartList extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.favorite_border),
               onPressed: () {
-                cart.addFavorite(cart.items[index]);
-                cart.remove(cart.items[index]);
+                if (cart.addFavorite(cart.items[index])) {
+                  cart.remove(cart.items[index]);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Already in favorites.')));
+                }
               },
             ),
           ],

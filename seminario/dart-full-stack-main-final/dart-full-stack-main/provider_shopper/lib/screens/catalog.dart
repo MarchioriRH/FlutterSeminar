@@ -102,13 +102,7 @@ class _MyAppBar extends StatelessWidget {
       actions: [
         Row(
           mainAxisSize: MainAxisSize.min,
-          children: [
-             IconButton(
-              icon: const Icon(Icons.favorite_border),
-              onPressed: () {
-                //cart.addFavorite(cart.items[index]);
-              },
-            ),
+          children: [            
             IconButton(
               icon: const Icon(Icons.shopping_cart),
               onPressed: () => context.go('/catalog/cart'),
